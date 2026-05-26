@@ -2,9 +2,10 @@
 
 Local image generation kit backed by `stable-diffusion.cpp`.
 
-The workload exposes an OpenAI-compatible OAIC surface at `/v1` and proxies image
-generation requests to an on-demand `sd-server` process. The server binary and
-model files are cached in the `models` host mount.
+The workload exposes an OpenAI-compatible OAIC surface at `/oaic`, with `/v1`
+also exposed as a convenience public alias. Requests are proxied to an on-demand
+`sd-server` process. The server binary and model files are cached in the `models`
+host mount.
 
 ## Run
 
@@ -15,7 +16,7 @@ env -u LOG_FORMAT capakit up . --mount models=/path/to/model-cache
 Then call:
 
 ```sh
-curl "$CAPAKIT_URL/v1/images/generations" \
+curl "$CAPAKIT_URL/oaic/v1/images/generations" \
   -H 'content-type: application/json' \
   -d '{"prompt":"soft watercolor picture book cottage","size":"512x512"}'
 ```

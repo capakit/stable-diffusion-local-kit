@@ -43,7 +43,7 @@ host_mounts:
     access: read_write
 exports:
   oaic:
-    path: /v1
+    path: /oaic
 workloads:
   image-generator:
     endpoints:
@@ -68,6 +68,10 @@ workloads:
             SD_CPP_DEFAULT_STEPS: default_steps
             SD_CPP_CFG_SCALE: cfg_scale
 expose:
+- path: /oaic
+  target: image-generator
+  endpoints:
+  - oaic
 - path: /v1
   target: image-generator
   endpoints:
