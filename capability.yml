@@ -1,0 +1,74 @@
+version: '1'
+name: stable-diffusion-local
+options:
+  default_model:
+    kind: string
+    default: turingevo/tiny-sd-gguf
+    description: Local path or Hugging Face repo/file spec for the default diffusion model.
+  release_tag:
+    kind: string
+    default: master-650-1ceb5bd
+    description: stable-diffusion.cpp release tag to download on demand.
+  backend:
+    kind: enum
+    default: auto
+    enum_values:
+    - auto
+    - cpu
+    - metal
+    description: Runtime backend passed to sd-server.
+  params_backend:
+    kind: enum
+    default: cpu
+    enum_values:
+    - auto
+    - cpu
+    - metal
+    description: Parameter placement backend passed to sd-server.
+  threads:
+    kind: number
+    default: 4
+    description: Number of CPU threads passed to sd-server.
+  default_steps:
+    kind: number
+    default: 8
+    description: Default sampling steps used by sd-server.
+  cfg_scale:
+    kind: number
+    default: 1
+    description: Default classifier-free guidance scale used by sd-server.
+host_mounts:
+  models:
+    usage: Local stable-diffusion.cpp binary and model cache
+    access: read_write
+exports:
+  oaic:
+    path: /v1
+workloads:
+  image-generator:
+    endpoints:
+    - oaic
+    mounts:
+    - mount_mid: models
+      access: read_write
+    runtime:
+      source:
+        toolchain: bun
+        prepare:
+          command: bun install
+          allow_network: true
+        start:
+          command: bun run src/index.ts
+          env_from_options:
+            SD_CPP_DEFAULT_MODEL: default_model
+            SD_CPP_RELEASE_TAG: release_tag
+            SD_CPP_BACKEND: backend
+            SD_CPP_PARAMS_BACKEND: params_backend
+            SD_CPP_THREADS: threads
+            SD_CPP_DEFAULT_STEPS: default_steps
+            SD_CPP_CFG_SCALE: cfg_scale
+expose:
+- path: /v1
+  target: image-generator
+  endpoints:
+  - oaic
