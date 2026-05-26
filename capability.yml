@@ -59,6 +59,7 @@ workloads:
           allow_network: true
         start:
           command: bun run src/index.ts
+          allow_network: true
           env_from_options:
             SD_CPP_DEFAULT_MODEL: default_model
             SD_CPP_RELEASE_TAG: release_tag
