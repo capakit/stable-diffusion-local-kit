@@ -66,7 +66,7 @@ Commands
   capakit run https://github.com/capakit/stable-diffusion-local-kit \
     --mount models=~/.capakit/models
 - Test:
-  capakit test /Users/roman/Code/capakit/demo_kits/stable-diffusion-local-kit
+  capakit test .
 ```
 
 ## Run
