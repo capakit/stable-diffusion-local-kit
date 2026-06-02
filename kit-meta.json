@@ -19,9 +19,12 @@
     "featured": false,
     "order": 60,
     "tags": [
+      "stable-diffusion",
       "image-generation",
       "oaic",
-      "local-model"
+      "local-ai",
+      "typescript",
+      "bun"
     ]
   }
 }

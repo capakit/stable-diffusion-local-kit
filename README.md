@@ -7,6 +7,8 @@ Update kit-meta.json or capability.yml, then rerun the generator instead of hand
 
 Local AI app Kit that serves stable-diffusion.cpp through an OpenAI-compatible image endpoint.
 
+**Tags:** `stable-diffusion` `image-generation` `oaic` `local-ai` `typescript` `bun`
+
 ## What It Does
 
 - Downloads and runs stable-diffusion.cpp on demand.
