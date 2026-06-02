@@ -48,6 +48,8 @@ workloads:
   image-generator:
     endpoints:
     - oaic
+    - protocol: http
+      path: /test
     mounts:
     - mount_mid: models
       access: read_write

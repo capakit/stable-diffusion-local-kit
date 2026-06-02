@@ -1,39 +1,93 @@
-# stable-diffusion-local
+<!--
+Generated from kit-meta.json by scripts/demo-kit-standard.mjs.
+Update kit-meta.json or capability.yml, then rerun the generator instead of hand-editing generated README sections.
+-->
 
-Local image generation kit backed by `stable-diffusion.cpp`.
+# Stable Diffusion Local
 
-The workload exposes an OpenAI-compatible OAIC surface at `/oaic`, with `/v1`
-also exposed as a convenience public alias. Requests are proxied to an on-demand
-`sd-server` process. The server binary and model files are cached in the `models`
-host mount.
+Local AI app Kit that serves stable-diffusion.cpp through an OpenAI-compatible image endpoint.
+
+## What It Does
+
+- Downloads and runs stable-diffusion.cpp on demand.
+- Loads a local path or Hugging Face diffusion model spec.
+- Exposes an OpenAI-compatible image-generation API for other Kits.
+
+## Technologies
+
+- stable-diffusion.cpp
+- GGUF diffusion models
+- CapaKit OAIC endpoint
+- TypeScript
+- Bun
+
+## App Kit Info
+
+```text
+AI app Kit: stable-diffusion-local
+
+Exposes
+- Public path: /oaic
+  Protocols:
+    - Protocol: oaic
+      Path: /oaic
+- Public path: /v1
+  Protocols:
+    - Protocol: oaic
+      Path: /oaic
+
+Requires
+Secrets:
+No secrets declared.
+
+Host mounts:
+- models [read_write]
+  Usage: Local stable-diffusion.cpp binary and model cache
+
+Options:
+- backend [enum, default=auto, values=auto|cpu|metal]: Runtime backend passed to sd-server.
+- cfg_scale [number, default=1]: Default classifier-free guidance scale used by sd-server.
+- default_model [string, default=turingevo/tiny-sd-gguf]: Local path or Hugging Face repo/file spec for the default diffusion model.
+- default_steps [number, default=8]: Default sampling steps used by sd-server.
+- params_backend [enum, default=cpu, values=auto|cpu|metal]: Parameter placement backend passed to sd-server.
+- release_tag [string, default=master-650-1ceb5bd]: stable-diffusion.cpp release tag to download on demand.
+- threads [number, default=4]: Number of CPU threads passed to sd-server.
+
+External services
+No external services declared.
+
+AI app Kit dependencies
+No AI app Kit dependencies declared.
+Exports provided to dependents:
+- oaic -> /oaic
+
+Commands
+- Run:
+  capakit run https://github.com/capakit/stable-diffusion-local-kit \
+    --mount models=~/.capakit/models
+- Test:
+  capakit test /Users/roman/Code/capakit/demo_kits/stable-diffusion-local-kit
+```
 
 ## Run
 
 ```sh
-env -u LOG_FORMAT capakit up . --mount models=/path/to/model-cache
+capakit run https://github.com/capakit/stable-diffusion-local-kit \
+--mount models=~/.capakit/models
 ```
 
-Then call:
+## Test
 
 ```sh
-curl "$CAPAKIT_URL/oaic/v1/images/generations" \
-  -H 'content-type: application/json' \
-  -d '{"prompt":"soft watercolor picture book cottage","size":"512x512"}'
+capakit test .
 ```
 
-The `model` request field may be either a local model path or a Hugging Face
-repo/file selector, for example:
+## Security
 
-```json
-{"model": "turingevo/tiny-sd-gguf", "prompt": "a tiny red boat on a pond"}
-```
+Vault secrets are user-provided secrets available only to trusted integrations such as secure exit nodes. Kit secrets are Kit-local secrets that can be exposed to code workloads.
 
-## Options
+## About CapaKit
 
-- `default_model`: local path or Hugging Face repo/file spec.
-- `release_tag`: `stable-diffusion.cpp` release tag to download.
-- `backend`: `auto`, `cpu`, or `metal`.
-- `params_backend`: `auto`, `cpu`, or `metal`.
-- `threads`: CPU threads.
-- `default_steps`: default sampling steps.
-- `cfg_scale`: default guidance scale.
+CapaKit runs AI app Kits locally with isolated workloads, explicit mounts, and agent-friendly commands. Learn more at https://capakit.com.
+
+More AI app Kits: https://github.com/capakit/apps

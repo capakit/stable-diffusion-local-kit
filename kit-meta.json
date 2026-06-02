@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "displayName": "Stable Diffusion Local",
+  "repo": "https://github.com/capakit/stable-diffusion-local-kit",
+  "description": "Local AI app Kit that serves stable-diffusion.cpp through an OpenAI-compatible image endpoint.",
+  "whatItDoes": [
+    "Downloads and runs stable-diffusion.cpp on demand.",
+    "Loads a local path or Hugging Face diffusion model spec.",
+    "Exposes an OpenAI-compatible image-generation API for other Kits."
+  ],
+  "technologies": [
+    "stable-diffusion.cpp",
+    "GGUF diffusion models",
+    "CapaKit OAIC endpoint",
+    "TypeScript",
+    "Bun"
+  ],
+  "catalog": {
+    "featured": false,
+    "order": 60,
+    "tags": [
+      "image-generation",
+      "oaic",
+      "local-model"
+    ]
+  }
+}

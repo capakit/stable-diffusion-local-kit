@@ -1,6 +1,7 @@
 import { createRunnerSdk, endpointPath, hostMountMid } from "@capakit/sdk";
 
 import { registerOaic } from "./capakit_oaic.ts";
+import { registerTestHttp } from "./capakit_test.ts";
 import { StableDiffusionServerManager } from "./stable_diffusion_server.ts";
 
 const sdk = createRunnerSdk({
@@ -28,5 +29,6 @@ const stableDiffusion = new StableDiffusionServerManager({
 });
 
 registerOaic(sdk, stableDiffusion, endpointPath("/oaic"));
+registerTestHttp(sdk, stableDiffusion);
 
 await sdk.start();

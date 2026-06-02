@@ -1,5 +1,6 @@
 import { endpointPath } from "@capakit/sdk";
 import type { EndpointPath, RunnerSdk } from "@capakit/sdk";
+import { mountOaic } from "@capakit/sdk/oaic";
 
 import type { StableDiffusionServerManager } from "./stable_diffusion_server.ts";
 
@@ -14,8 +15,7 @@ export function registerOaic(
     stableDiffusion: StableDiffusionServerManager,
     endpoint: EndpointPath = endpointPath("/oaic"),
 ): void {
-    sdk.mount({
-        protocol: "oaic",
+    mountOaic(sdk, {
         endpoint,
         handler: async (request) => {
             const url = new URL(request.url);
