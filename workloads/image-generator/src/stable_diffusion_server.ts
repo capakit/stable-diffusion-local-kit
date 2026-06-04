@@ -1,5 +1,5 @@
 import { spawn, type ChildProcess } from "node:child_process";
-import { access, chmod, mkdir, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { chmod, mkdir, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { totalmem } from "node:os";
 import { join } from "node:path";
 import type { Readable } from "node:stream";
@@ -113,6 +113,16 @@ export class StableDiffusionServerManager {
     }
 }
 
+export async function hydrateStableDiffusionRuntime(
+    options: StableDiffusionServerManagerOptions,
+    extraModels: string[] = [],
+): Promise<void> {
+    await hydrateStableDiffusionServer(options.modelsDir, options.releaseTag);
+    for (const model of hydrateModelSpecs(options.defaultModel, extraModels)) {
+        await hydrateModel(options.modelsDir, model);
+    }
+}
+
 function backendArgs(backend: string, paramsBackend: string): string[] {
     const args: string[] = [];
     if (backend !== "auto") {
@@ -180,9 +190,14 @@ async function hydrateModel(modelsDir: string, model: string): Promise<string> {
     const { repo, selector } = parseModelSpec(model);
     const modelDir = join(modelsDir, "diffusion", safeName(repo));
     await mkdir(modelDir, { recursive: true });
+    const cached = await findCachedModel(modelDir, selector);
+    if (cached) {
+        await checkModelMemory(model, await localFileSize(cached));
+        return cached;
+    }
     const selected = await resolveModelFile(repo, selector);
     const destination = join(modelDir, selected.fileName);
-    if (await isExecutable(destination)) {
+    if (await fileExists(destination)) {
         await checkModelMemory(model, await localFileSize(destination));
         return destination;
     }
@@ -237,6 +252,46 @@ function isSupportedModelFile(fileName: string): boolean {
     return [".gguf", ".safetensors", ".ckpt"].some((suffix) =>
         fileName.toLowerCase().endsWith(suffix)
     );
+}
+
+async function findCachedModel(root: string, selector: string | null): Promise<string | null> {
+    let entries;
+    try {
+        entries = await readdir(root, { withFileTypes: true });
+    } catch {
+        return null;
+    }
+    for (const entry of entries) {
+        const path = join(root, entry.name);
+        if (entry.isDirectory()) {
+            const found = await findCachedModel(path, selector);
+            if (found) {
+                return found;
+            }
+            continue;
+        }
+        if (!entry.isFile() || !isSupportedModelFile(entry.name)) {
+            continue;
+        }
+        if (!selector || entry.name.toLowerCase().includes(selector.toLowerCase())) {
+            return path;
+        }
+    }
+    return null;
+}
+
+function hydrateModelSpecs(defaultModel: string, extraModels: string[]): string[] {
+    const models: string[] = [];
+    const seen = new Set<string>();
+    for (const model of [defaultModel, ...extraModels]) {
+        const trimmed = model.trim();
+        if (!trimmed || seen.has(trimmed)) {
+            continue;
+        }
+        seen.add(trimmed);
+        models.push(trimmed);
+    }
+    return models;
 }
 
 async function checkModelMemory(model: string, modelBytes: number): Promise<void> {
@@ -416,10 +471,9 @@ async function remoteFileSize(url: string): Promise<number> {
     return bytes;
 }
 
-async function isExecutable(path: string): Promise<boolean> {
+async function fileExists(path: string): Promise<boolean> {
     try {
-        await access(path);
-        return true;
+        return (await stat(path)).isFile();
     } catch {
         return false;
     }

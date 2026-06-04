@@ -5,6 +5,10 @@ options:
     kind: string
     default: turingevo/tiny-sd-gguf
     description: Local path or Hugging Face repo/file spec for the default diffusion model.
+  hydrate_models:
+    kind: string
+    default: ""
+    description: Additional diffusion model specs to hydrate before start, separated by commas or newlines.
   release_tag:
     kind: string
     default: master-650-1ceb5bd
@@ -41,9 +45,6 @@ host_mounts:
   models:
     usage: Local stable-diffusion.cpp binary and model cache
     access: read_write
-exports:
-  oaic:
-    path: /oaic
 workloads:
   image-generator:
     endpoints:
@@ -58,10 +59,20 @@ workloads:
         toolchain: bun
         prepare:
           command: bun install
-          allow_network: true
+        hydrate:
+          command: bun run src/prepare.ts
+          env_from_options:
+            SD_CPP_DEFAULT_MODEL: default_model
+            SD_CPP_HYDRATE_MODELS: hydrate_models
+            SD_CPP_RELEASE_TAG: release_tag
+            SD_CPP_BACKEND: backend
+            SD_CPP_PARAMS_BACKEND: params_backend
+            SD_CPP_THREADS: threads
+            SD_CPP_DEFAULT_STEPS: default_steps
+            SD_CPP_CFG_SCALE: cfg_scale
         start:
           command: bun run src/index.ts
-          allow_network: true
+          network: loopback
           env_from_options:
             SD_CPP_DEFAULT_MODEL: default_model
             SD_CPP_RELEASE_TAG: release_tag
