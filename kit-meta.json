@@ -9,11 +9,12 @@
     "Exposes an OpenAI-compatible image-generation API for other Kits."
   ],
   "technologies": [
-    "stable-diffusion.cpp",
-    "GGUF diffusion models",
-    "CapaKit OAIC endpoint",
-    "TypeScript",
-    "Bun"
+    "stable-diffusion",
+    "image-generation",
+    "oaic",
+    "local-ai",
+    "typescript",
+    "bun"
   ],
   "catalog": {
     "featured": false,
