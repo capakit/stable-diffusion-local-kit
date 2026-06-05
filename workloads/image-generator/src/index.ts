@@ -1,10 +1,10 @@
-import { createRunnerSdk, endpointPath, hostMountMid } from "@capakit/sdk";
+import { createWorkloadSdk, endpointPath, hostMountMid } from "@capakit/sdk";
 
 import { registerOaic } from "./capakit_oaic.ts";
 import { registerTestHttp } from "./capakit_test.ts";
 import { StableDiffusionServerManager } from "./stable_diffusion_server.ts";
 
-const sdk = createRunnerSdk({
+const sdk = createWorkloadSdk({
     onShutdown: async () => {
         await stableDiffusion.stop();
     },

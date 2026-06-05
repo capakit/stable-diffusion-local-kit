@@ -1,9 +1,9 @@
-import { endpointPath, type RunnerSdk } from "@capakit/sdk";
+import { endpointPath, type WorkloadSdk } from "@capakit/sdk";
 
 import type { StableDiffusionServerManager } from "./stable_diffusion_server.ts";
 
 export function registerTestHttp(
-    sdk: RunnerSdk,
+    sdk: WorkloadSdk,
     stableDiffusion: StableDiffusionServerManager,
 ): void {
     sdk.mount({

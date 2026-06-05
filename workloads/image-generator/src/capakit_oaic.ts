@@ -1,5 +1,5 @@
 import { endpointPath } from "@capakit/sdk";
-import type { EndpointPath, RunnerSdk } from "@capakit/sdk";
+import type { EndpointPath, WorkloadSdk } from "@capakit/sdk";
 import { mountOaic } from "@capakit/sdk/oaic";
 
 import type { StableDiffusionServerManager } from "./stable_diffusion_server.ts";
@@ -11,7 +11,7 @@ type ImageGenerationPayload = {
 };
 
 export function registerOaic(
-    sdk: RunnerSdk,
+    sdk: WorkloadSdk,
     stableDiffusion: StableDiffusionServerManager,
     endpoint: EndpointPath = endpointPath("/oaic"),
 ): void {

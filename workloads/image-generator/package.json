@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@capakit/sdk": "0.0.6",
+    "@capakit/sdk": "0.0.7",
     "openai": "^6.41.0"
   },
   "devDependencies": {
