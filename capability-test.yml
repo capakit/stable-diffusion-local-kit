@@ -1,29 +1,29 @@
 tests:
-  - id: generate-test-image
+  - id: generates-one-image-through-stable-diffusion-cpp
     kind: http
-    test: generates one image through stable-diffusion.cpp
     target:
       workload: image-generator
       endpoint: /test
     request:
       method: POST
-      path: /generate-test-image
-    verboseOutput:
-      - $.image_count
-      - $.image_bytes
-      - $.has_url
+      path: /generates-one-image-through-stable-diffusion-cpp
+    verbose_output:
+      - $.body.image_count
+      - $.body.image_bytes
+      - $.body.has_url
     validations:
-      - $.image_count.gte(1)
-      - $.image_bytes.gte(100)
-  - id: image-generator-typecheck
+      - $.status_code.eq(200)
+      - $.body.image_count.gte(1)
+      - $.body.image_bytes.gte(100)
+  - id: image-generator-workload-typechecks
     kind: exec
-    test: image generator workload typechecks
     target:
       workload: image-generator
-    command:
-      - bun
-      - x
-      - tsc
-      - --noEmit
+    request:
+      command:
+        - bun
+        - x
+        - tsc
+        - --noEmit
     validations:
       - $.exit_code.eq(0)
