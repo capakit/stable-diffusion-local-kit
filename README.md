@@ -13,7 +13,7 @@ Local AI app Kit that serves stable-diffusion.cpp through an OpenAI-compatible i
 - Loads a local path or Hugging Face diffusion model spec.
 - Exposes an OpenAI-compatible image-generation API for other Kits.
 
-## Technologies
+## Tags
 
 - stable-diffusion
 - image-generation
