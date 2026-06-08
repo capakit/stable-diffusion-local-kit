@@ -13,7 +13,7 @@ export function registerTestHttp(
             if (request.method !== "POST") {
                 return Response.json({ error: "method not allowed" }, { status: 405 });
             }
-            if (lastPathSegment(new URL(request.url).pathname) !== "generates-one-image-through-stable-diffusion-cpp") {
+            if (new URL(request.url).pathname !== "/generates-one-image-through-stable-diffusion-cpp") {
                 return Response.json({ error: "not found" }, { status: 404 });
             }
             try {
@@ -26,10 +26,6 @@ export function registerTestHttp(
             }
         },
     });
-}
-
-function lastPathSegment(pathname: string): string | undefined {
-    return pathname.split("/").filter(Boolean).at(-1);
 }
 
 async function generateTestImage(stableDiffusion: StableDiffusionServerManager) {
