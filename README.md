@@ -5,7 +5,7 @@ Update kit-meta.json or capability.yml, then rerun the generator instead of hand
 
 # Stable Diffusion Local
 
-Local AI app Kit that serves stable-diffusion.cpp through an OpenAI-compatible image endpoint.
+Local Kit that serves stable-diffusion.cpp through an OpenAI-compatible image endpoint.
 
 ## What It Does
 
@@ -22,10 +22,11 @@ Local AI app Kit that serves stable-diffusion.cpp through an OpenAI-compatible i
 - typescript
 - bun
 
-## App Kit Info
+## Kit Info
 
 ```text
-AI app Kit: stable-diffusion-local
+Kit: stable-diffusion-local
+License: Apache-2.0
 
 Exposes
 - Public path: /oaic
@@ -58,8 +59,8 @@ Options:
 External services
 No external services declared.
 
-AI app Kit dependencies
-No AI app Kit dependencies declared.
+Kit dependencies
+No Kit dependencies declared.
 
 Use as dependency
 Add this to another Kit's capability.yml:
@@ -90,5 +91,7 @@ capakit test .
 ```
 
 ## About CapaKit
+
+CapaKit is a free runtime and CLI toolkit for building AI app Kits. When your agent builds, tests, or runs a Kit, it happens in isolation, not on your host.
 
 https://capakit.com
